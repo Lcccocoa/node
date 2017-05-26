@@ -1,20 +1,16 @@
 
-{{#if flash}}
-    <h1>{{flash.message}}</h1>
-{{/if}}
-
-<div>
-    <form id="addForm" action="/" method="POST">
-        <div>
-            <label for="file">File:</label>
-            <input type="file" id="file" name="file" accept="image/*" id="fieldPhoto">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </form>
-</div>
+<ul class="uk-list uk-list-striped">
+    <li>List item 1</li>
+    <li>List item 2</li>
+    <li>List item 3</li>
+</ul>
 
 {{#section 'head'}}
-
+    <script type="text/javascript">
+        function tap_user() {
+            window.webkit.messageHandlers.tapUser.postMessage(null);
+        }
+    </script>
 {{/section}}
 
 {{#section 'foot'}}

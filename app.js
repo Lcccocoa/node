@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var credentials = require('./credentials');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var handlebars = require('express3-handlebars').create({
     defaultLayout: 'main',
     helpers: {
@@ -12,21 +15,25 @@ var handlebars = require('express3-handlebars').create({
     }
 });
 
-var credentials = require('./credentials');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
+// 路由
+var userRouter = require('./router/user');
+
+// api
+var userApi = require('./api/user');
 
 // 端口
 app.set('port', process.env.PORT || 3000);
 // 静态文件目录
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/node_modules/uikit/dist'));
+app.use(express.static(__dirname + '/node_modules/jquery/dist'));
 // body 解析
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 // cookie
 app.use(cookieParser(credentials.cookieSecret));
 // session
 app.use(session());
-
 // 设置模板引擎
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -37,31 +44,13 @@ app.use(function(req, res, next) {
     next();
 });
 
+// api
+app.use('/api', userApi);
+// 用户路由
+app.use('/user', userRouter);
+
 app.get('/', function(req, res) {
-    var now = new Date();
-    console.log(req.signedCookies.name);
-    res.cookie('name', 'aaaaa', { signed: true });
-    res.render('home', {
-        year: now.getFullYear(),
-        month: now.getMonth()
-    });
-}).post('/', function(req, res) {
-    req.session.flash = {
-        message: '出错了'
-    };
-    res.redirect(303, '/');
-});
-
-app.get('/about', function(req, res) {
-    res.render('about');
-});
-
-app.post('/process', function(req, res) {
-    if (req.xhr || req.accepts('json,html') === 'json') {
-        res.send({ success: true });
-    } else {
-        res.redirect(303, '/about');
-    }
+    res.render('home');
 });
 
 app.use(function(req, res) {
@@ -74,6 +63,9 @@ app.use(function(req, res) {
     res.render('500');
 });
 
-app.listen(app.get('port'), function name(params) {
+// app.listen(app.get('port'), '192.168.58.100', function(params) {
+//     console.log('start on http://localhost:' + app.get('port'));
+// });
+app.listen(app.get('port'), function(params) {
     console.log('start on http://localhost:' + app.get('port'));
 });

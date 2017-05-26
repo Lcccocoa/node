@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/uikit.min.css" />
+    <script src="/jquery.js"></script>
+    <script src="/js/uikit.min.js"></script>
+    <script src="/js/uikit-icons.min.js"></script>
+    {{!--头--}}
     {{{_sections.head}}}
 </head>
 <body>
+    {{!--导航--}}
+    {{> nav}}
+    {{!--内容--}}
     {{{body}}}
-    <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    {{!--页脚--}}
+    {{> foot}}
+    {{!--js--}}
     {{{_sections.foot}}}
 </body>
 </html>
