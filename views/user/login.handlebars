@@ -1,9 +1,16 @@
+{{#section 'head'}}
+<script src="http://cdn.bootcss.com/axios/0.16.1/axios.min.js"></script>
+{{/section}}
+
 <div class="uk-flex uk-flex-center uk-flex-middle">
     <div class="uk-card uk-card-default uk-card-body">
         <div class="uk-margin uk-text-center">
             <h3>登录</h3>
         </div>
         <form method="POST" action="" class="loginForm">
+            <div class="uk-alert-warning" id="loginAlert" v-if="show">
+                <p>\{{msg}}</p>
+            </div>
             <div class="uk-margin">
                 <div class="uk-inline">
                     <span class="uk-form-icon" uk-icon="icon: user"></span>
@@ -29,35 +36,34 @@
 
 </div>
 
-{{#section 'head'}}
-    <script src="http://cdn.bootcss.com/axios/0.16.1/axios.min.js"></script>
-{{/section}}
-
 {{#section 'foot'}}
+
 <script>
-    $(document).ready(function () {
-        $('.loginForm').on('submit', function(evt){
-            evt.preventDefault();
-            var username = $('#account').val();
-            var password = $('#password').val();
-            axios.post('/api/user/login', {
-                username: username,
-                password: password
-            })
-            .then(function(response){
-                if(response.code === 0) {
+    $('.loginForm').on('submit', function (evt) {
+        evt.preventDefault();
+        var username = $('#account').val();
+        var password = $('#password').val();
+        var $loginAlert = $('#loginAlert');
+        axios.post('/api/user/login', {
+            username: username,
+            password: password
+        })
+            .then(function (response) {
+                if (response.data.code === 0) {
                     // 校验成功
-                    UIkit.notification("<span uk-icon='icon: check'></span> 登录成功");
+                    
                 }
                 else {
                     // 登陆失败
-                    UIkit.notification("<span uk-icon='icon: close'></span> 登录失败,请检查账号密码");
+                    
                 }
             })
-            .catch(function(error){
+            .catch(function (error) {
                 console.log(error);
             });
-        });
     });
+
 </script>
+
+
 {{/section}}

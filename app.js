@@ -27,13 +27,19 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules/uikit/dist'));
 app.use(express.static(__dirname + '/node_modules/jquery/dist'));
+app.use(express.static(__dirname + '/node_modules/vue/dist'));
 // body 解析
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // cookie
 app.use(cookieParser(credentials.cookieSecret));
 // session
-app.use(session());
+app.use(session({
+    secret: credentials.cookieSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
 // 设置模板引擎
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
