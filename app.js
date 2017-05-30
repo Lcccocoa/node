@@ -14,6 +14,7 @@ var handlebars = require('express3-handlebars').create({
         }
     }
 });
+var userController = require('./controller/userController');
 
 // 路由
 var userRouter = require('./router/user');
@@ -43,7 +44,11 @@ app.use(session({
 // 设置模板引擎
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
+// 配置passport
+app.use(userController.passport.initialize());
+app.use(userController.passport.session());
 
+//
 app.use(function(req, res, next) {
     res.locals.flash = req.session.flash;
     delete req.session.flash;
