@@ -40,7 +40,10 @@ app.use(session({
     secret: credentials.cookieSecret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+    cookie: {
+        secure: true,
+        maxAge: 60000
+    }
 }));
 // 设置模板引擎
 app.engine('handlebars', handlebars.engine);
