@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var credentials = require('./credentials');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var flash = require('connect-flash');
 var handlebars = require('express3-handlebars').create({
     defaultLayout: 'main',
     helpers: {
@@ -14,11 +15,11 @@ var handlebars = require('express3-handlebars').create({
         }
     }
 });
-var userController = require('./controller/userController');
 
+// 用户控制器
+var userController = require('./controller/userController');
 // 路由
 var userRouter = require('./router/user');
-
 // api
 var userApi = require('./api/user');
 
@@ -44,16 +45,11 @@ app.use(session({
 // 设置模板引擎
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
+// 设置flash
+app.use(flash());
 // 配置passport
 app.use(userController.passport.initialize());
 app.use(userController.passport.session());
-
-//
-app.use(function(req, res, next) {
-    res.locals.flash = req.session.flash;
-    delete req.session.flash;
-    next();
-});
 
 // api
 app.use('/api', userApi);

@@ -8,9 +8,11 @@
             <h3>登录</h3>
         </div>
         <form method="POST" action="" class="loginForm">
-            <div class="uk-alert-warning" id="loginAlert" v-if="show">
-                <p>\{{msg}}</p>
+            {{#if message}}
+            <div class="uk-alert-warning" id="loginAlert">
+                <p>{{message}}</p>
             </div>
+            {{/if}}
             <div class="uk-margin">
                 <div class="uk-inline">
                     <span class="uk-form-icon" uk-icon="icon: user"></span>

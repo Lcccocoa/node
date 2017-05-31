@@ -3,27 +3,34 @@ var models = require('../models');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-passport.serializeUser(function(user,done){
-    done(null,user.username);
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
 });
-
-passport.deserializeUser(function(username,done){
-    done(null,{username:username});
+passport.deserializeUser(function(id, done) {
+    models.User.findOne({
+        where: {
+            id: id
+        }
+    }).then(function(data) {
+        if (data == null) return done({ message: '用户不存在' });
+        done(null, data);
+    });
 });
 
 //
-passport.use('local', new LocalStrategy(function (username, password, done) {
+passport.use(new LocalStrategy(function(username, password, done) {
     models.User.findOne({
         where: {
             username: username
         }
-    }).then(function (data) {
-        console.log('是否有数据:'+data);
-        if (data.username !== username){
-            return done(null, false, {message: 'incorrect username'});
+    }).then(function(data) {
+        if (data == null) {
+            console.log('用户不存在');
+            return done(null, false, { message: '用户不存在' });
         }
-        if (data.password !== password){
-            return done(null, false, {message: 'incorrect password'});
+        if (data.password !== password) {
+            console.log('密码错误');
+            return done(null, false, { message: '密码错误' });
         }
         console.log(data);
         return done(null, data);
