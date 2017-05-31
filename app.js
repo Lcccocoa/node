@@ -34,14 +34,13 @@ app.use(express.static(__dirname + '/node_modules/vue/dist'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // cookie
-app.use(cookieParser(credentials.cookieSecret));
+app.use(cookieParser());
 // session
 app.use(session({
     secret: credentials.cookieSecret,
-    resave: false,
+    resave: true,
     saveUninitialized: true,
     cookie: {
-        secure: true,
         maxAge: 60000
     }
 }));

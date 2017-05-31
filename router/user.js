@@ -13,12 +13,15 @@ router.get('/login', function(req, res, next) {
     failureFlash: true
 }));
 
+var isAuthenticated = function (req,res,next) {
+    console.log(req.isAuthenticated());
+    if (req.isAuthenticated()) return next();
+    res.redirect('/user/login');
+}
+
 // 文章
-router.get('/article', function(req, res) {
-    if (req.user) {
-        res.render('article');
-    }
-    res.redirect(303, '/user/login');
+router.get('/article', isAuthenticated, function(req, res) {
+    res.render('user/article');
 });
 
 module.exports = router;
