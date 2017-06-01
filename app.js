@@ -25,33 +25,39 @@ var userApi = require('./api/user');
 
 // 端口
 app.set('port', process.env.PORT || 3000);
+
+// app.configure(function() {
 // 静态文件目录
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules/uikit/dist'));
 app.use(express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(express.static(__dirname + '/node_modules/vue/dist'));
+// cookie
+app.use(cookieParser());
 // body 解析
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// cookie
-app.use(cookieParser());
 // session
 app.use(session({
     secret: credentials.cookieSecret,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-        maxAge: 60000
+        maxAge: 1000 * 60 * 30
     }
 }));
+
 // 设置模板引擎
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-// 设置flash
-app.use(flash());
+
 // 配置passport
 app.use(userController.passport.initialize());
+// 设置flash
+app.use(flash());
 app.use(userController.passport.session());
+// });
+
 
 // api
 app.use('/api', userApi);

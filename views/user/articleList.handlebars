@@ -1,0 +1,38 @@
+ {{#if articles}}
+
+<ul class="uk-list uk-list-striped">
+    <div class="uk-flex uk-flex-right">
+        <div class="uk-margin">
+            <a href="/user/article/add">添加文章</a>
+        </div>
+    </div>
+
+    
+    {{#each articles}}
+    <li><a href="/user/article/detail/{{id}}">{{title}}</a></li>
+    {{/each}}
+</ul>
+
+{{!-- 页码--}}
+<ul class="uk-pagination uk-flex-center" uk-margin>
+    <li><a href="#"><span uk-pagination-previous></span></a></li>
+    <li><a href="#">1</a></li>
+    <li class="uk-disabled"><span>...</span></li>
+    <li class="uk-active"><span>7</span></li>
+    <li><a href="#"><span uk-pagination-next></span></a></li>
+</ul>
+
+{{else}}
+
+<div class="uk-alert-primary" uk-alert>
+    <a class="uk-alert-close" uk-close></a>
+    <p>目前没有任何文章,请<em><a href="/user/article/add">添加文章</a></em></p>
+</div>
+
+{{/if}}
+
+{{!-- 文章列表结束 --}}
+
+{{#section 'head'}}
+
+{{/section}}

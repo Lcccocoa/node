@@ -3,6 +3,8 @@ var router = express.Router();
 var axios = require('axios');
 var userController = require('../controller/userController');
 
+var article = require('./article');
+
 // 登录
 router.get('/login', function(req, res, next) {
     // res.render('user/login', { message: '登录出错' });
@@ -13,15 +15,13 @@ router.get('/login', function(req, res, next) {
     failureFlash: true
 }));
 
-var isAuthenticated = function (req,res,next) {
+var isAuthenticated = function(req, res, next) {
     console.log(req.isAuthenticated());
     if (req.isAuthenticated()) return next();
     res.redirect('/user/login');
-}
+};
 
 // 文章
-router.get('/article', isAuthenticated, function(req, res) {
-    res.render('user/article');
-});
+router.use(article);
 
 module.exports = router;
