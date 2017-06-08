@@ -21,7 +21,12 @@ var isAuthenticated = function(req, res, next) {
     res.redirect('/user/login');
 };
 
+// 用户首页
+router.get('/', function(req, res) {
+    res.render('admin/index', { layout: 'admin' });
+});
+
 // 文章
-router.use(article);
+router.use('/article', isAuthenticated, article);
 
 module.exports = router;

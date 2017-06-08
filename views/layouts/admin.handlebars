@@ -6,22 +6,20 @@
     <title>{{title}}</title>
     <link rel="stylesheet" href="/css/css.css">
     <link rel="stylesheet" href="/css/zui.min.css">
-    <link rel="stylesheet" href="/css/uikit.min.css">
+    {{!--<link rel="stylesheet" href="/css/uikit.min.css">--}}
     {{!--头--}}
     {{{_sections.head}}}
 </head>
 <body>
     {{!--导航--}}
-    {{> nav}}
+    {{> admin/nav}}
     {{!--内容--}}
     {{{body}}}
-    {{!--页脚--}}
-    {{> foot}}
     {{!--js--}}
     <script src="/jquery.js"></script>
     <script src="/js/zui.min.js"></script>
-    <script src="/js/uikit.min.js"></script>
-    <script src="/js/uikit-icons.min.js"></script>
+    {{!--<script src="/js/uikit.min.js"></script>
+    <script src="/js/uikit-icons.min.js"></script>--}}
     {{{_sections.foot}}}
 </body>
 </html>

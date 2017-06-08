@@ -1,7 +1,19 @@
-
-<article class="uk-article">
-    <h1 class="uk-article-title">{{article.title}}</h1>
-    <p class="uk-article-meta">{{article.tag}}</p>
-    <hr>
-    <p>{{article.content}}</p>
-</article>
+<div class="container">
+    <article class="article">
+        <!-- 文章头部 -->
+        <header>
+            <h1 class="text-center">{{article.title}}</h1>
+            <!-- 文章属性列表 -->
+            <dl class="dl-inline">
+                <dt>关键字:</dt>
+                <dd>{{article.tag}}</dd>
+                <dt>更新时间:</dt>
+                <dd>{{article.updatedAt}}</dd>
+            </dl>
+        </header>
+        <!-- 文章正文部分 -->
+        <section class="content" id="content">
+            {{article.content}}
+        </section>
+    </article>
+</div>

@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var credentials = require('./credentials');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 var flash = require('connect-flash');
 var handlebars = require('express3-handlebars').create({
     defaultLayout: 'main',
@@ -21,7 +22,7 @@ var userController = require('./controller/userController');
 // 路由
 var userRouter = require('./router/user');
 // api
-var userApi = require('./api/user');
+var api = require('./api/api');
 
 // 端口
 app.set('port', process.env.PORT || 3000);
@@ -32,6 +33,9 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules/uikit/dist'));
 app.use(express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(express.static(__dirname + '/node_modules/vue/dist'));
+app.use(express.static(__dirname + '/node_modules/zui/dist'));
+app.use(express.static(__dirname + '/node_modules/sweetalert/dist'));
+app.use(express.static(__dirname + '/node_modules/axios/dist'));
 // cookie
 app.use(cookieParser());
 // body 解析
@@ -39,6 +43,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // session
 app.use(session({
+    store: new RedisStore({
+        host: '127.0.0.1',
+        port: 6379,
+        db: '0'
+    }),
     secret: credentials.cookieSecret,
     resave: false,
     saveUninitialized: false,
@@ -60,7 +69,7 @@ app.use(userController.passport.session());
 
 
 // api
-app.use('/api', userApi);
+app.use('/api', api);
 // 用户路由
 app.use('/user', userRouter);
 
@@ -70,12 +79,12 @@ app.get('/', function(req, res) {
 
 app.use(function(req, res) {
     res.status(404);
-    res.render('404');
+    res.render('404', { layout: null });
 });
 
 app.use(function(req, res) {
     res.status(500);
-    res.render('500');
+    res.render('500', { layout: null });
 });
 
 // app.listen(app.get('port'), '192.168.58.100', function(params) {

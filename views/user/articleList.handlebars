@@ -1,38 +1,131 @@
- {{#if articles}}
+<div class="container">
+    <div class="list list-condensed">
+        <header>
+            <span class="pull-right"><a href="/user/article/add">添加文章</a></span> 
+            <h3><i class="icon-list-ul"></i> 文章列表 <small>共 {{page.total}} 条</small></h3>
+        </header>
+        
+        {{#if articles}}
+            <div class="items items-hover">
+                {{#each articles}}
+                <div class="item">
+                    <div class="item-heading">
+                        <div class="pull-right">
+                            <button class="btn btn-link" type="button" onclick="modifyArticle({{id}})"><i class="icon icon-star"></i> 编辑</button>
+                            <button class="btn btn-link" type="button" onclick="deleteArticle({{id}}, '{{title}}')"><i class="icon icon-trash"></i> 删除</button>
+                            {{!--<a onclick="modifyArticle({{id}})"><i class="icon-pencil"></i> 编辑</a> &nbsp;
+                            <a onclick="deleteArticle({{id}}, '{{title}}')"><i class="icon-remove"></i> 删除</a>--}}
+                        </div>
+                        <h4><a href="/user/article/detail/{{id}}">{{title}}</a></h4>
+                    </div>
+                    <div class="item-content">
+                        <span class=""></span>
+                        <p class="text-muted"><span class="label label-info">{{tag}}</span></p>
+                    </div>
+                </div>
+                
+                {{/each}}
+            </div>
 
-<ul class="uk-list uk-list-striped">
-    <div class="uk-flex uk-flex-right">
-        <div class="uk-margin">
-            <a href="/user/article/add">添加文章</a>
+            {{!--分页控件--}}
+            <ul class="pager pager-pills" id="pager">
+            </ul>
+        {{else}}
+        <div class="uk-alert-primary" uk-alert>
+            <a class="uk-alert-close" uk-close></a>
+            <p>目前没有任何文章,请<em><a href="/user/article/add">添加文章</a></em></p>
         </div>
+        {{/if}}
     </div>
-
-    
-    {{#each articles}}
-    <li><a href="/user/article/detail/{{id}}">{{title}}</a></li>
-    {{/each}}
-</ul>
-
-{{!-- 页码--}}
-<ul class="uk-pagination uk-flex-center" uk-margin>
-    <li><a href="#"><span uk-pagination-previous></span></a></li>
-    <li><a href="#">1</a></li>
-    <li class="uk-disabled"><span>...</span></li>
-    <li class="uk-active"><span>7</span></li>
-    <li><a href="#"><span uk-pagination-next></span></a></li>
-</ul>
-
-{{else}}
-
-<div class="uk-alert-primary" uk-alert>
-    <a class="uk-alert-close" uk-close></a>
-    <p>目前没有任何文章,请<em><a href="/user/article/add">添加文章</a></em></p>
 </div>
 
-{{/if}}
+{{!-- 文章列表结束 --}} 
+{{#section 'head'}} 
+{{!--<script src="http://cdn.bootcss.com/vue/2.3.3/vue.min.js"></script>--}}
+<script src="/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/sweetalert.css">
 
-{{!-- 文章列表结束 --}}
+{{/section}}
 
-{{#section 'head'}}
+{{#section 'foot'}}
+<script src="/axios.min.js"></script>
 
+<script>
+    function initPager(){
+        var count = {{page.count}};
+        var index = {{page.index}};
+        // 添加上一页按钮
+        if (index == 0) {
+            $('#pager').append('<li class="previous disabled"><a href="/user/article">«</a></li>');
+        } else {
+            console.log(index);
+            $('#pager').append('<li class="previous"><a href="/user/article?index=' + (index-1) + '">«</a></li>');
+        }
+
+        // 添加页码
+        for (var i=0; i<count; i++) {
+            if (i == index){
+                $('#pager').append('<li class="active"><a href="/user/article?index=' + i + '">'+ (i+1) +'</a></li>');
+            } else {
+                $('#pager').append('<li><a href="/user/article?index=' + i + '">'+ (i+1) +'</a></li>');
+            }
+        }
+
+        // 下一页按钮
+        if (index == count-1) {
+            $('#pager').append('<li class="next disabled"><a href="/user/article">»</a></li>');
+        } else {
+            $('#pager').append('<li class="next"><a href="/user/article?index=' + (index+1) + '">»</a></li>');
+        }
+    }
+    initPager();
+</script>
+{{!--操作--}}
+<script>
+    function deleteArticle(id , title){
+        console.log('删除'+id);
+        swal({
+            title: "删除文章",
+            text: '确定删除 <span>'+title + '</span>', 
+            showCancelButton: true,
+            cancelButtonText: '取消',
+            showConfirmButton: true,
+            confirmButtonText: '删除',
+            closeOnConfirm: false,
+            html: true
+        }, function (isConfirm){
+            console.log(id);
+            if (isConfirm) {
+                // 删除
+                axios.delete('/api/article/delete', {
+                    data: {
+                        id: id
+                    }
+                })
+                .then(function (response){
+                    console.log(response);
+                    if (response.data.code == 0) {
+                        // 成功
+                        console.log(0);
+                        swal("删除成功");
+                        window.location.reload();
+                    } else {
+                        // 失败
+                        console.log(1);
+                        swal("删除失败");
+                    }
+                })
+                .catch(function (error){
+                    console.log(error);
+                });
+            } else {
+                // 取消
+            }
+        });
+    }
+    function modifyArticle(id){
+        console.log('修改'+id);
+        window.location.href = '/user/article/update/' + id ;
+    }
+</script>
 {{/section}}

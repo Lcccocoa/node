@@ -1,15 +1,20 @@
 var express = require('express');
 var router = express.Router();
 var models = require('../models');
+var marked = require('marked');
+
+function dateFormmat(date) {
+    return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+}
 
 // 文章
-router.get('/article', function(req, res) {
+router.get('/', function(req, res) {
     console.log(req.query);
     var pageSize = 5;
     var pageIndex = 0;
 
-    if (req.query.pageIndex) {
-        pageIndex = req.query.pageindex;
+    if (req.query.index) {
+        pageIndex = req.query.index;
     }
 
     models.Article.findAndCountAll({
@@ -18,23 +23,31 @@ router.get('/article', function(req, res) {
     }).then(function(data) {
         res.render('user/articleList', {
             articles: data.rows,
-            count: data.count,
-            pageindex: pageIndex
+            page: {
+                index: pageIndex,
+                count: Math.ceil(data.count / pageSize),
+                total: data.count
+            }
         });
     });
 });
 // 文章详情
-router.get('/article/detail/:id', function(req, res) {
+router.get('/detail/:id', function(req, res) {
     models.Article.findById(req.params.id).then(function(data) {
         res.render('user/articleDetail', {
-            article: data
+            article: {
+                title: data.title,
+                tag: data.tag,
+                updatedAt: dateFormmat(data.updatedAt),
+                content: marked(data.content)
+            }
         });
     });
 });
 // 文章添加
-router.get('/article/add', function(req, res) {
+router.get('/add', function(req, res) {
     res.render('user/articleAdd');
-}).post('/article/add', function(req, res) {
+}).post('/add', function(req, res) {
     models.Article.create({
         title: req.body.title,
         tag: req.body.tag,
@@ -46,6 +59,21 @@ router.get('/article/add', function(req, res) {
             res.redirect('/user/article/add');
         }
     });
+});
+// 文章修改
+router.get('/update/:id', function(req, res) {
+    res.render('user/articleAdd', { id: req.params.id });
+}).post('/update/:id', function(req, res) {
+    models.Article.findById(req.params.id).then(function(article) {
+        article.update(req.body).then(function(data) {
+            if (data) {
+                res.redirect('/user/article');
+            } else {
+                res.redirect('/user/article/update/' + req.params.id);
+            }
+        });
+    });
+
 });
 
 module.exports = router;
