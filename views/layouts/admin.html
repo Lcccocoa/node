@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> {{!--头--}} {{{_sections.head}}}
+
+    <style>
+        body,
+        html {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .pl {
+            padding-left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid pl">
+        {{!--导航--}}
+        <div class="col-md-3 pl">
+            {{> admin/nav}}
+        </div>
+        {{!--内容--}}
+        <div class="col-md-9">
+            {{{body}}}
+        </div>
+    </div>
+    {{!--js--}}
+    <script src="/jquery.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {{{_sections.foot}}}
+</body>
+
+</html>

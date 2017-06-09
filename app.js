@@ -6,8 +6,10 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var flash = require('connect-flash');
+// var hbs = require('hbs');
 var handlebars = require('express3-handlebars').create({
     defaultLayout: 'main',
+    extname: 'html',
     helpers: {
         section: function(name, options) {
             if (!this._sections) this._sections = {};
@@ -57,8 +59,17 @@ app.use(session({
 }));
 
 // 设置模板引擎
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'handlebars');
+app.engine('.html', handlebars.engine);
+app.set('view engine', '.html');
+// hbs.registerHelper('section', function(name, options) {
+//     if (!this._sections) this._sections = {};
+//     this._sections[name] = options.fn(this);
+//     return null;
+// });
+// hbs.registerPartials(__dirname + '/views/partials');
+
+// app.set('view engine', 'html');
+// app.engine('html', hbs.__express);
 
 // 配置passport
 app.use(userController.passport.initialize());
