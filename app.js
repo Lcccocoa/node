@@ -26,6 +26,10 @@ var userRouter = require('./router/user');
 // api
 var api = require('./api/api');
 
+// 配置
+var path = require("path");
+var config = require(path.join(__dirname, '.', 'config', 'config.json'));
+
 // 端口
 app.set('port', process.env.PORT || 3000);
 
@@ -38,11 +42,13 @@ app.use(express.static(__dirname + '/node_modules/vue/dist'));
 app.use(express.static(__dirname + '/node_modules/zui/dist'));
 app.use(express.static(__dirname + '/node_modules/sweetalert/dist'));
 app.use(express.static(__dirname + '/node_modules/axios/dist'));
+app.use(express.static(__dirname + '/node_modules/wangeditor/release/'));
+app.use(express.static(__dirname + '/upload'));
 // cookie
 app.use(cookieParser());
 // body 解析
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 // session
 app.use(session({
     store: new RedisStore({
@@ -78,6 +84,10 @@ app.use(flash());
 app.use(userController.passport.session());
 // });
 
+app.use(function(req, res, next) {
+    console.log(req.path);
+    next();
+});
 
 // api
 app.use('/api', api);
@@ -98,9 +108,9 @@ app.use(function(req, res) {
     res.render('500', { layout: null });
 });
 
-// app.listen(app.get('port'), '192.168.58.100', function(params) {
+app.listen(app.get('port'), config['host'], function(params) {
+    console.log('start on http://' + config['host'] + ':' + app.get('port'));
+});
+// app.listen(app.get('port'), function(params) {
 //     console.log('start on http://localhost:' + app.get('port'));
 // });
-app.listen(app.get('port'), function(params) {
-    console.log('start on http://localhost:' + app.get('port'));
-});

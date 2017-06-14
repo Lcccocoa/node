@@ -1,5 +1,5 @@
 <div class="container">
-    <form method="POST" action="">
+    <form method="POST" action="" id="form">
         <div class="form-group">
             <div class="form-group">
                 <label for="title">标题</label>
@@ -10,68 +10,95 @@
                 <input type="text" class="form-control" id="tag" placeholder="输入文章关键字" name="tag">
             </div>
             <div class="form-group">
-                <label for="content">内容</label> 
-                <textarea class="form-control" rows="25" placeholder="输入文章内容" name="content" id="content"></textarea>
-                {{!--<input type="text" class="form-control" id="content" placeholder="输入文章标题" name="content">--}}
-                {{!--<div id="editor">
-                </div>--}}
+                <label for="content">内容</label>
+                <input type="text" name="content" hidden>
+                <div id="editor">
+                </div>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-default" placeholder="输入文章关键字">
+                <button type="submit" class="btn btn-default">提交</button>
             </div>
+        </div>
+    </form>
+    <hr>
+    <form method="POST" action="/api/article/upload" enctype="multipart/form-data" id="upload">
+        <div class="form-group">
+            <label for="image">图片</label>
+            <input type="file" name="image" class="form-control">
+            <input type="submit" class="btn" value="上传">
         </div>
     </form>
 </div>
 
 {{#section 'head'}}
-{{!--<link href="http://cdn.bootcss.com/quill/1.2.5/quill.snow.min.css" rel="stylesheet">
-<script src="http://cdn.bootcss.com/quill/1.2.5/quill.min.js"></script>--}}
-{{/section}} 
-{{!----}}
+<!---->
+{{/section}}
+<!---->
 {{#section 'foot'}}
-{{!--<script>
-    var quill = new Quill('#editor', {
-        modules: {
-            toolbar: [
-                [{ header: [1, 2, 3, 4, false] }],
-                ['bold', 'italic', 'underline'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                ['link', 'image', 'video', 'code-block'],
-                ['clean']
-            ]
+<script src="/axios.min.js"></script>
+<script src="/wangEditor.js"></script>
+<script>
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.customConfig.uploadImgServer = '/api/article/upload';
+    editor.customConfig.uploadImgMaxLength = 5;
+    editor.customConfig.uploadImgTimeout = 300000;
+    editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024;
+    editor.customConfig.uploadFileName = 'image';
+    editor.customConfig.debug = location.href.indexOf('wangeditor_debug_mode=1') > 0;
+    editor.customConfig.uploadImgHooks = {
+        timeout: function(xhr, editeor) {
+            console.log('timeout');
         },
-        placeholder: '输入文章内容',
-        theme: 'snow'
-    });
+        error: function(xhr, editor) {
+            console.log('error');
+        },
+        customInsert: function(insertImg, result, eitor) {
+            var url = 'http://127.0.0.1:3000/' + result.data;
+            console.log(url);
+            insertImg(url);
+        }
+    };
+    editor.create();
 
-</script>--}}
+    // 提交时填充content字段
+    var form = document.querySelector('form');
+    form.onsubmit = function() {
+        // Populate hidden form on submit
+        var content = document.querySelector('input[name=content]');
+        content.value = editor.txt.html();
+        return true;
+    };
 
-    <script src="/axios.min.js"></script>
-    <script>
-        var reg = /.*\/([^\.\/]+)/g;
-        var url = window.location.href;
-        var articleId = parseInt(url.replace(reg,"$1"));
-        // 如果路径是
-        if (typeof(articleId) === 'number') {
-            // 更新视图
-            axios.get('/api/article/get/' + articleId)
-            .then(function (response){
+    function isNotANumber(inputData) {　　 //isNaN(inputData)不能判断空串或一个空格
+        if (parseFloat(inputData).toString() == "NaN") {
+            return false;　　
+        } else {　　　　
+            return true;　　
+        }
+    }
+
+    ////
+    var reg = /.*\/([^\.\/]+)/g;
+    var url = window.location.href;
+    var articleId = parseInt(url.replace(reg, "$1"));
+
+    if (isNotANumber(articleId)) {
+        // 更新视图
+        axios.get('/api/article/get/' + articleId)
+            .then(function(response) {
                 var data = response.data;
-                if(data.code == 0) {
-                    console.log(data);
+                if (data.code == 0) {
+                    // console.log(data);
                     $('#title').val(data.data.title);
                     $('#tag').val(data.data.tag);
-                    $('#content').val(data.data.content);
+                    // $('#content').val(data.data.content);
+                    editor.txt.html(data.data.content);
                 }
-                
             })
-            .catch(function (error){
+            .catch(function(error) {
                 console.log(error);
             });
-        } else {
-
-        }
-
-
-    </script>
+    }
+</script>
 {{/section}}

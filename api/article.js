@@ -1,7 +1,12 @@
 var express = require('express');
 var router = express.Router();
-
 var models = require('../models');
+
+var path = require("path");
+var config = require(path.join(__dirname, '..', 'config', 'config.json'));
+
+var formidable = require('formidable');
+
 
 router.get('/get/:id', function(req, res) {
     console.log(req.params);
@@ -80,6 +85,24 @@ router.delete('/delete', function(req, res) {
             });
         }
 
+    });
+});
+
+router.post('/upload', function(req, res) {
+    var form = new formidable.IncomingForm();
+    form.uploadDir = 'upload';
+    form.maxFieldsSize = 5 * 1024 * 1024;
+    form.keepExtensions = true;
+    form.parse(req, function(err, fields, files) {
+        var errno = 0;
+        if (errno) errno = 1;
+
+        var url = files.image.path.split('/')[1];
+        res.json({
+            errno: errno,
+            data: url,
+            msg: null
+        });
     });
 });
 

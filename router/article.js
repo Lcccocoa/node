@@ -39,7 +39,7 @@ router.get('/detail/:id', function(req, res) {
                 title: data.title,
                 tag: data.tag,
                 updatedAt: dateFormmat(data.updatedAt),
-                content: marked(data.content)
+                content: data.content //marked(data.content)
             }
         });
     });
@@ -48,11 +48,7 @@ router.get('/detail/:id', function(req, res) {
 router.get('/add', function(req, res) {
     res.render('user/articleAdd');
 }).post('/add', function(req, res) {
-    models.Article.create({
-        title: req.body.title,
-        tag: req.body.tag,
-        content: req.body.content
-    }).then(function(data) {
+    models.Article.create(req.body).then(function(data) {
         if (data) {
             res.redirect('/user/article');
         } else {
