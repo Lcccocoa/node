@@ -5,6 +5,8 @@ var userController = require('../controller/userController');
 
 var article = require('./article');
 
+var models = require('../models');
+
 // 登录
 router.get('/login', function(req, res, next) {
     // res.render('user/login', { message: '登录出错' });
@@ -23,7 +25,23 @@ var isAuthenticated = function(req, res, next) {
 
 // 用户首页
 router.get('/', function(req, res) {
-    res.render('admin/index', { layout: 'admin' });
+    var pageSize = 5;
+    var pageIndex = 0;
+    models.Article.findAndCountAll({
+        limit: pageSize,
+        offset: pageSize * pageIndex
+    }).then(function(data) {
+        res.render('admin/index', {
+            articles: data.rows,
+            page: {
+                index: pageIndex,
+                count: Math.ceil(data.count / pageSize),
+                total: data.count
+            },
+            layout: null
+        });
+    });
+    // res.render('admin/index', { layout: null });
 });
 
 // 文章

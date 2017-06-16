@@ -5,19 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
-    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> {{!--头--}} {{{_sections.head}}}
 
-    <style>
-        body,
-        html {
-            padding: 0;
-            margin: 0;
-        }
-        
-        .pl {
-            padding-left: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="/material-design-lite/dist/material.indigo-amber.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!---->
+    {{{_sections.head}}}
 </head>
 
 <body>
@@ -33,7 +25,7 @@
     </div>
     {{!--js--}}
     <script src="/jquery.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../node_modules/material-design-lite/dist/material.min.js"></script>
     {{{_sections.foot}}}
 </body>
 

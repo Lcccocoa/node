@@ -42,8 +42,9 @@ app.use(express.static(__dirname + '/node_modules/vue/dist'));
 app.use(express.static(__dirname + '/node_modules/zui/dist'));
 app.use(express.static(__dirname + '/node_modules/sweetalert/dist'));
 app.use(express.static(__dirname + '/node_modules/axios/dist'));
-app.use(express.static(__dirname + '/node_modules/wangeditor/release/'));
+app.use(express.static(__dirname + '/node_modules/wangeditor/release'));
 app.use(express.static(__dirname + '/upload'));
+app.use(express.static(__dirname + '/node_modules'));
 // cookie
 app.use(cookieParser());
 // body 解析
