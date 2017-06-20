@@ -1,27 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
-    <link rel="stylesheet" href="/css/css.css">
-    <link rel="stylesheet" href="/css/zui.min.css">
-    <link rel="stylesheet" href="/css/uikit.min.css">
-    {{!--头--}}
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" media="screen,projection" href="/materialize-css/dist/css/materialize.css"> {{!--头--}}
+    <style>
+        {{!--body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        main {
+            flex: 1 0 auto;
+        }--}}
+    </style>
+
     {{{_sections.head}}}
 </head>
+
 <body>
-    {{!--导航--}}
-    {{> nav}}
-    {{!--内容--}}
-    {{{body}}}
-    {{!--页脚--}}
-    {{> foot}}
+    {{!--导航--}} 
+    <header>
+        {{> nav}} 
+    </header>
+    {{!--内容--}} 
+    <main>
+        {{{body}}} 
+    </main>
+    
+    {{!--页脚--}} 
+    <footer>
+        {{> foot}} 
+    </footer>
     {{!--js--}}
-    <script src="/jquery.js"></script>
-    <script src="/js/zui.min.js"></script>
-    <script src="/js/uikit.min.js"></script>
-    <script src="/js/uikit-icons.min.js"></script>
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/materialize-css/dist/js/materialize.min.js"></script>
     {{{_sections.foot}}}
 </body>
+
 </html>
