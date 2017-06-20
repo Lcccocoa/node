@@ -1,0 +1,15 @@
+@import "../../node_modules/materialize-css/sass/materialize.scss";
+
+.side-col {
+    @extend .col; // .s3
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.side-s3 {
+    @extend .s3;
+    padding-left: 0;
+    padding-right: 0;
+    // margin-left: 0;
+    // margin-right: 0;
+}

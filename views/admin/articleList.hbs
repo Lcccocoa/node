@@ -1,0 +1,121 @@
+<!---->
+{{!--<div class="col s12 m9 l10">--}}
+<div class="container">
+
+    <div class="row">
+        <ul class="collection" style="border-left-width:0;border-right-width:0;">
+            {{#each articles}}
+            <li class="collection-item">
+                <a href="/admin/article/view/{{id}}"><span>{{title}}</span></a>
+                <a class="secondary-content" href="#!" onclick="deleteArticle({{id}}, '{{title}}')"><i class="material-icons">delete</i></a>
+                <a class="secondary-content" href="#!" onclick="modifyArticle({{id}})"><i class="material-icons">mode_edit</i></a>
+            </li>
+            {{/each}}
+        </ul>
+
+        <ul class="pagination" id="pager">
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="fixed-action-btn horizontal">
+            <a class="btn-floating btn-large teal" href="/admin/article/add">
+                <i class="large material-icons">mode_edit</i>
+            </a>
+        </div>
+    </div>
+</div>
+{{!--</div>--}}
+
+<!---->
+
+{{!-- 文章列表结束 --}} 
+{{#section 'head'}}
+<script src="/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/sweetalert.css"> 
+{{/section}} 
+{{!----}}
+{{#section 'foot'}}
+<script src="/axios.min.js"></script>
+<script>
+    function initPager() {
+        var count = {{page.count}};
+        var index = {{ page.index }};
+        // 添加上一页按钮
+        if (index == 0) {
+            $('#pager').append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>');
+        } else {
+            console.log(index);
+            $('#pager').append('<li class="waves-effect"><a href="/admin/article?index=' + (index - 1) + '"><i class="material-icons">chevron_left</i></a></li>');
+        }
+
+        // 添加页码
+        for (var i = 0; i < count; i++) {
+            if (i == index) {
+                $('#pager').append('<li class="active teal lighten-2"><a href="/admin/article?index=' + i + '">' + (i + 1) + '</a></li>');
+            } else {
+                $('#pager').append('<li class="waves-effect"><a href="/admin/article?index=' + i + '">' + (i + 1) + '</a></li>');
+            }
+        }
+
+        // 下一页按钮
+        if (index == count - 1) {
+            $('#pager').append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
+        } else {
+            $('#pager').append('<li class="waves-effect"><a href="/admin/article?index=' + (index + 1) + '"><i class="material-icons">chevron_right</i></a></li>');
+        }
+    }
+    initPager();
+
+</script>
+{{!--操作--}}
+<script>
+    function deleteArticle(id, title) {
+        console.log('删除' + id);
+        swal({
+            title: "删除文章",
+            text: '确定删除 <span>' + title + '</span>',
+            showCancelButton: true,
+            cancelButtonText: '取消',
+            showConfirmButton: true,
+            confirmButtonText: '删除',
+            closeOnConfirm: false,
+            html: true
+        }, function (isConfirm) {
+            console.log(id);
+            if (isConfirm) {
+                // 删除
+                axios.delete('/api/article/delete', {
+                    data: {
+                        id: id
+                    }
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.data.code == 0) {
+                            // 成功
+                            console.log(0);
+                            swal("删除成功");
+                            window.location.reload();
+                        } else {
+                            // 失败
+                            console.log(1);
+                            swal("删除失败");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            } else {
+                // 取消
+            }
+        });
+    }
+
+    function modifyArticle(id) {
+        console.log('修改' + id);
+        window.location.href = '/admin/article/update/' + id;
+    }
+
+</script>
+{{/section}}

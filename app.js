@@ -9,7 +9,7 @@ var flash = require('connect-flash');
 // var hbs = require('hbs');
 var handlebars = require('express3-handlebars').create({
     defaultLayout: 'main',
-    extname: 'html',
+    extname: 'hbs',
     helpers: {
         section: function(name, options) {
             if (!this._sections) this._sections = {};
@@ -36,10 +36,7 @@ app.set('port', process.env.PORT || 3000);
 // app.configure(function() {
 // 静态文件目录
 app.use(express.static(__dirname + '/public'));
-app.use(express.static(__dirname + '/node_modules/uikit/dist'));
-app.use(express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(express.static(__dirname + '/node_modules/vue/dist'));
-app.use(express.static(__dirname + '/node_modules/zui/dist'));
 app.use(express.static(__dirname + '/node_modules/sweetalert/dist'));
 app.use(express.static(__dirname + '/node_modules/axios/dist'));
 app.use(express.static(__dirname + '/node_modules/wangeditor/release'));
@@ -61,22 +58,13 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 30
+        maxAge: 1000 * 60 * 60 * 24
     }
 }));
 
 // 设置模板引擎
-app.engine('.html', handlebars.engine);
-app.set('view engine', '.html');
-// hbs.registerHelper('section', function(name, options) {
-//     if (!this._sections) this._sections = {};
-//     this._sections[name] = options.fn(this);
-//     return null;
-// });
-// hbs.registerPartials(__dirname + '/views/partials');
-
-// app.set('view engine', 'html');
-// app.engine('html', hbs.__express);
+app.engine('.hbs', handlebars.engine);
+app.set('view engine', '.hbs');
 
 // 配置passport
 app.use(userController.passport.initialize());
@@ -93,7 +81,7 @@ app.use(function(req, res, next) {
 // api
 app.use('/api', api);
 // 用户路由
-app.use('/user', userRouter);
+app.use('/admin', userRouter);
 
 app.get('/', function(req, res) {
     res.render('home');

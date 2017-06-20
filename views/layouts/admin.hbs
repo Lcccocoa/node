@@ -1,0 +1,62 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Material Design Lite</title>
+
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" media="screen,projection" href="/materialize-css/dist/css/materialize.css">
+    <link rel="stylesheet" href="/materialize-css/css/prism.css">
+    <link rel="stylesheet" href="/materialize-css/css/ghpages-materialize.css">
+
+    {{{_sections.head}}}
+</head>
+
+<body>
+    <header>
+        <nav class="top-nav  teal lighten-2">
+            <div class="container">
+                <div class="nav-wrapper"><a class="page-title">{{nav_title}}</a></div>
+            </div>
+        </nav>
+        <div class="container"><a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only"><i class="material-icons">menu</i></a></div>
+        {{> admin/nav}}
+    </header>
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m9 l10">
+                    {{{body}}}
+                </div>
+            </div>
+        </div>
+    </main>
+    {{!--<footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <h5 class="white-text">Help Materialize Grow</h5>
+            </div>
+        </div>
+    </footer>--}}
+
+
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/materialize-css/dist/js/materialize.min.js"></script>
+    <script>
+        $(".button-collapse").sideNav();
+        // 设置菜单状态
+        var path = window.location.pathname;
+        var node = $('#nav-mobile').children('li').children('a').each(function(){
+            if (path.indexOf($(this).attr('href'))>=0) {
+                {{!--$(this).addClass('white-text');--}}
+                $(this).parent().addClass('active teal lighten-5');
+            }
+        });
+    </script>
+    <!---->
+    {{{_sections.foot}}}
+</body>
+
+</html>

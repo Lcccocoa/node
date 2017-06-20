@@ -10,7 +10,7 @@ function dateFormmat(date) {
 // 文章
 router.get('/', function(req, res) {
     console.log(req.query);
-    var pageSize = 5;
+    var pageSize = 10;
     var pageIndex = 0;
 
     if (req.query.index) {
@@ -21,32 +21,39 @@ router.get('/', function(req, res) {
         limit: pageSize,
         offset: pageSize * pageIndex
     }).then(function(data) {
-        res.render('user/articleList', {
+        res.render('admin/articleList', {
             articles: data.rows,
             page: {
                 index: pageIndex,
                 count: Math.ceil(data.count / pageSize),
                 total: data.count
-            }
+            },
+            layout: 'admin',
+            nav_title: '文章管理'
         });
     });
 });
 // 文章详情
-router.get('/detail/:id', function(req, res) {
+router.get('/view/:id', function(req, res) {
     models.Article.findById(req.params.id).then(function(data) {
-        res.render('user/articleDetail', {
+        res.render('admin/articleDetail', {
             article: {
                 title: data.title,
                 tag: data.tag,
                 updatedAt: dateFormmat(data.updatedAt),
                 content: data.content //marked(data.content)
-            }
+            },
+            layout: 'admin',
+            nav_title: '文章浏览'
         });
     });
 });
 // 文章添加
 router.get('/add', function(req, res) {
-    res.render('user/articleAdd');
+    res.render('admin/articleAdd', {
+        layout: 'admin',
+        nav_title: '添加文章'
+    });
 }).post('/add', function(req, res) {
     models.Article.create(req.body).then(function(data) {
         if (data) {
@@ -58,14 +65,18 @@ router.get('/add', function(req, res) {
 });
 // 文章修改
 router.get('/update/:id', function(req, res) {
-    res.render('user/articleAdd', { id: req.params.id });
+    res.render('admin/articleAdd', {
+        id: req.params.id,
+        layout: 'admin',
+        nav_title: '修改文章'
+    });
 }).post('/update/:id', function(req, res) {
     models.Article.findById(req.params.id).then(function(article) {
         article.update(req.body).then(function(data) {
             if (data) {
-                res.redirect('/user/article');
+                res.redirect('/admin/article');
             } else {
-                res.redirect('/user/article/update/' + req.params.id);
+                res.redirect('/admin/article/update/' + req.params.id);
             }
         });
     });
