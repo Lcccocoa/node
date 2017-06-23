@@ -1,22 +1,31 @@
-<div class="container">
-    <ul class="list-group">
-        <li class="list-group-item">List item 1</li>
-        <li class="list-group-item">List item 2</li>
-        <li class="list-group-item">List item 3</li>
-    </ul>
+<div class="parallax-container">
+    <div class="parallax">
+        <img src="/img/parallax1.jpg">
+    </div>
+</div>
+<div class="section white">
+    <div class="row container">
+        <h2 class="header">Parallax</h2>
+        <p class="grey-text text-darken-3 lighten-3">Parallax is an effect where the background content or image in this case, is moved at a different speed than the
+            foreground content while scrolling.</p>
+    </div>
+</div>
+<div class="parallax-container">
+    <div class="parallax"><img src="/img/parallax2.jpg"></div>
 </div>
 
-
 {{#section 'head'}}
-    <script type="text/javascript">
+<style>
 
-    </script>
+</style>
+<script type="text/javascript">
+    
+</script>
 {{/section}}
 
 {{#section 'foot'}}
+<script src="http://cdn.bootcss.com/iScroll/5.2.0/iscroll.js"></script>
 <script>
-    $(document).ready(function () {
-
-    });
+    $('.parallax').parallax();
 </script>
 {{/section}}
