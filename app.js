@@ -78,6 +78,12 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.use(function (req, res, next) {
+    res.locals.errors = req.flash('error');
+    res.locals.infos = req.flash('info');
+    next();
+});
+
 // api
 app.use('/api', api);
 // 用户路由

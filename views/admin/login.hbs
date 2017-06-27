@@ -16,21 +16,28 @@
 
     <div class="container">
         <div class="row">
-            <div class="col s12 m4 offset-m4">
+            <div class="col s12 m4 offset-m4 card-panel">
                 <h4 class="center-align">登录</h4>
                 <form action="" method="POST" class="col s12">
                     <div class="row">
                         <div class="input-field col s12">
-                            <input type="text" class="validate" id="exampleInputAccount8" placeholder="电子邮件" name="username">
+                            <input type="text" class="validate" id="exampleInputAccount8" name="username">
                             <label for="exampleInputAccount8">账号</label>
                         </div>
                         <div class="input-field col s12">
-                            <input type="password" class="validate" id="exampleInputPassword8" placeholder="密码" name="password">
+                            <input type="password" class="validate" id="exampleInputPassword8" name="password">
                             <label for="exampleInputPassword8">密码</label>
                         </div>
                         <div class="input-field col s12">
-                            <button class="btn waves-effect waves-light" type="submit" name="action">登录</button>
+                            <button class="btn waves-effect waves-light col s12 btn-large" type="submit" name="action">登录</button>
                         </div>
+                        {{#if errors}}
+                            <div class="input-field col s12">
+                                <div class="card-panel red lighten-3">
+                                    {{errors}}
+                                </div>
+                            </div>
+                        {{/if}}
                     </div>
                 </form>
             </div>
