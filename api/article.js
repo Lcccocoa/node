@@ -93,16 +93,34 @@ router.post('/upload', function(req, res) {
     form.uploadDir = 'upload';
     form.maxFieldsSize = 5 * 1024 * 1024;
     form.keepExtensions = true;
-    form.parse(req, function(err, fields, files) {
-        var errno = 0;
-        if (err) errno = 1;
 
-        var url = files.image.path.split('/')[1];
-        res.json({
-            errno: errno,
-            data: url,
-            msg: null
-        });
+    form.parse(req, function(err, fields, files) {
+        if (err) {
+            // 上传出错
+            res.json({
+                errno: 1,
+                data: null,
+                msg: "上传出错啦"
+            });
+        }
+
+        if (files.image) {
+            // 上传成功
+            var url = files.image.path.split('/')[1];
+            res.json({
+                errno: 0,
+                data: url,
+                msg: null
+            });
+        } else {
+            // 上传失败
+            res.json({
+                errno: 1,
+                data: null,
+                msg: "上传失败, 没有上传文件"
+            });
+        }
+
     });
 });
 

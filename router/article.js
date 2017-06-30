@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var models = require('../models');
-var marked = require('marked');
+var formidable = require('formidable');
+var os = require('os');
 
 function dateFormmat(date) {
     return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
@@ -55,13 +56,24 @@ router.get('/add', function(req, res) {
         nav_title: '添加文章'
     });
 }).post('/add', function(req, res) {
-    models.Article.create(req.body).then(function(data) {
-        if (data) {
-            res.redirect('/user/article');
-        } else {
-            res.redirect('/user/article/add');
-        }
+    var form = new formidable.IncomingForm();
+    form.uploadDir = '../upload';
+    form.encoding = 'utf-8';
+    form.keepExtensions = true;
+    form.maxFieldsSize = 2 * 1024 * 1024;
+    console.log(form.uploadDir);
+
+    form.parse(req, function(err, fields, files) {
+        res.json({ files: files });
     });
+
+    // models.Article.create(req.body).then(function(data) {
+    //     if (data) {
+    //         res.redirect('/user/article');
+    //     } else {
+    //         res.redirect('/user/article/add');
+    //     }
+    // });
 });
 // 文章修改
 router.get('/update/:id', function(req, res) {
