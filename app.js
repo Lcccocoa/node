@@ -46,13 +46,13 @@ app.use(express.static(__dirname + '/node_modules'));
 app.use(cookieParser());
 // body 解析
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.json());
 // session
 app.use(session({
     store: new RedisStore({
         host: '127.0.0.1',
         port: 6379,
-        db: '0'
+        db: 0
     }),
     secret: credentials.cookieSecret,
     resave: false,
@@ -78,7 +78,7 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     res.locals.errors = req.flash('error');
     res.locals.infos = req.flash('info');
     next();

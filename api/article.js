@@ -95,7 +95,7 @@ router.post('/upload', function(req, res) {
     form.keepExtensions = true;
     form.parse(req, function(err, fields, files) {
         var errno = 0;
-        if (errno) errno = 1;
+        if (err) errno = 1;
 
         var url = files.image.path.split('/')[1];
         res.json({
