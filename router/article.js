@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var models = require('../models');
 var formidable = require('formidable');
-var os = require('os');
+var path = require('path');
 
 function dateFormmat(date) {
     return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
@@ -57,23 +57,27 @@ router.get('/add', function(req, res) {
     });
 }).post('/add', function(req, res) {
     var form = new formidable.IncomingForm();
-    form.uploadDir = '../upload';
+    form.uploadDir = path.resolve(__dirname, '../upload');
     form.encoding = 'utf-8';
     form.keepExtensions = true;
     form.maxFieldsSize = 2 * 1024 * 1024;
-    console.log(form.uploadDir);
 
     form.parse(req, function(err, fields, files) {
-        res.json({ files: files });
+        if (files.hasOwnProperty('image')) {
+            var path = files.image.path.split('/');
+            var article = fields;
+            article['image'] = path[path.length - 1];
+            models.Article.create(article).then(function(data) {
+                if (data) {
+                    res.redirect('/admin/article');
+                } else {
+                    res.redirect('/admin/article/add');
+                }
+            });
+        } else {
+            res.redirect('/admin/article/add');
+        }
     });
-
-    // models.Article.create(req.body).then(function(data) {
-    //     if (data) {
-    //         res.redirect('/user/article');
-    //     } else {
-    //         res.redirect('/user/article/add');
-    //     }
-    // });
 });
 // 文章修改
 router.get('/update/:id', function(req, res) {

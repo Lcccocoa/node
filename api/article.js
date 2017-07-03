@@ -106,7 +106,8 @@ router.post('/upload', function(req, res) {
 
         if (files.image) {
             // 上传成功
-            var url = files.image.path.split('/')[1];
+            var path = files.image.path.split('/');
+            var url = path[path.length - 1];
             res.json({
                 errno: 0,
                 data: url,
